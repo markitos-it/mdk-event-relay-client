@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -21,7 +22,9 @@ func NewEventRelayClient(dbPath string) *EventRelayClient {
 	}
 }
 
-func (c *EventRelayClient) Publish(payload string) {
+func (c *EventRelayClient) Publish(event, payload string) {
+	payload = strings.ReplaceAll(payload, "\n", "")
+	payload = strings.ReplaceAll(payload, "\r", "")
 	log.Printf("Publishing event with payload: %s\n", payload)
 
 	if !json.Valid([]byte(payload)) {
@@ -35,7 +38,7 @@ func (c *EventRelayClient) Publish(payload string) {
 	}
 	defer db.Close()
 
-	result, err := db.Exec("INSERT INTO events (payload, status) VALUES (?, ?)", payload, "pending")
+	result, err := db.Exec("INSERT INTO events (event, payload, status) VALUES (?, ?, ?)", event, payload, "pending")
 	if err != nil {
 		log.Fatalf("[ERROR] Failed to insert event into local buffer: %v", err)
 	}
