@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type EventRelayClient struct {
@@ -29,7 +31,7 @@ func (c *EventRelayClient) Publish(payload string) {
 	connStr := fmt.Sprintf("%s?_journal_mode=WAL", c.dbPath)
 	db, err := sql.Open("sqlite3", connStr)
 	if err != nil {
-		log.Fatalf("[FATAL] Could not open the database: %v", err)
+		log.Fatalf("[FATAL] CLIENT Could not open the database: %v", err)
 	}
 	defer db.Close()
 
