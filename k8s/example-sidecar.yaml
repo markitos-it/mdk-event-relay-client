@@ -29,7 +29,7 @@ spec:
 
       containers:
         - name: relayer
-          image: us-central1-docker.pkg.dev/markitos-it-gcp-basico/images/mdk-event-relay:v0.0.1
+          image:  us-central1-docker.pkg.dev/markitos-it-gcp-basico/images/mdk-event-relay:v0.0.1
 
           env:
             - name: BUS_TYPE
@@ -43,7 +43,7 @@ spec:
 
 
         - name: application
-          image: us-central1-docker.pkg.dev/markitos-it-gcp-basico/images/mdk-app-portfolio:v0.0.1
+          image:  us-central1-docker.pkg.dev/markitos-it-gcp-basico/images/mdk-app-portfolio:v0.0.1
 
           env:
             - name: EVENT_RELAY_DATABASE_PATH
@@ -60,9 +60,9 @@ kind: Service
 metadata:
   name: application-using-relayer
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
-    - port: 3000
+    - port: 80
       targetPort: 3000
       nodePort: 31180
   selector:
